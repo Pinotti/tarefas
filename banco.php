@@ -1,13 +1,8 @@
 <?php
 
-$bdServidor = '127.0.0.1';
-$bdUsuario = 'sistematarefa';
-$bdSenha = 'sistema';
-$bdBanco = 'tarefas';
+$mysqli = new mysqli(BD_SERVIDOR, BD_USUARIO, BD_SENHA, BD_BANCO);
 
-$conexao = mysqli_connect($bdServidor, $bdUsuario, $bdSenha, $bdBanco);
-
-if (mysqli_connect_errno($conexao)) {
+if ($mysqli->connect_errno) {
     echo "Problemas para conectar no banco. Verifique os dados!";
     die();
 }
@@ -63,23 +58,23 @@ function editar_tarefa($conexao, $tarefa){
     mysqli_query($conexao, $sqlEditar);
 }
 
-function remover_tarefa($conexao, $id){
+function remover_tarefa($mysqli, $id){
     $sqlRemover = "DELETE FROM tarefas WHERE id = {$id}";
 
-    mysqli_query($conexao, $sqlRemover);
+    $mysqli->query($sqlRemover);
 }
 
-function gravar_anexo($conexao, $anexo){
+function gravar_anexo($mysqli, $anexo){
     $sqlGravar = "INSERT INTO anexos ( tarefa_id, nome, arquivo) 
                 VALUES ({$anexo['tarefa_id']},
                         '{$anexo['nome']}',
                         '{$anexo['arquivo']}')";
-    mysqli_query($conexao, $sqlGravar);
+    $mysqli->query($sqlGravar);
 }
 
-function buscar_anexos($conexao, $tarefa_id){
+function buscar_anexos($mysqli, $tarefa_id){
     $sql = "SELECT * FROM anexos WHERE tarefa_id = {$tarefa_id}";
-    $resultado = mysqli_query($conexao, $sql);
+    $resultado = $mysqli->query($sql);
 
     $anexos = array();
 
@@ -88,4 +83,16 @@ function buscar_anexos($conexao, $tarefa_id){
     }
 
     return $anexos;
+}
+
+function buscar_anexo($mysqli, $id){
+    $sqlBusca = 'SELECT * FROM anexos WHERE id = ' . $id;
+    $resultado = $mysqli->query($sqlBusca);
+    return mysqli_fetch_assoc($resultado);
+}
+
+function remover_anexo($mysqli, $id){
+    $sqlRemover = "DELETE FROM anexos WHERE id = {$id}";
+
+    $mysqli->query($sqlRemover);
 }

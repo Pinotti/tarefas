@@ -7,7 +7,7 @@
             <?php if ($tem_erros && isset($erros_validacao['nome'])) : ?>
                 <span class="erro"><?php echo $erros_validacao['nome']; ?></span>
             <?php endif; ?>
-            <input type="text" name="nome" value="<?php echo $tarefa['nome']; ?>" />
+            <input type="text" name="nome" value="<?php echo htmlspecialchars($tarefa['nome']); ?>" />
         </label>
         <label>
             Descrição (Opcional):

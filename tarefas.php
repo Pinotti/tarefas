@@ -2,8 +2,12 @@
 
 session_start();
 
+include "config.php";
 include "banco.php";
 include "ajudantes.php";
+include "classes/Tarefas.php";
+
+$tarefas = new Tarefas($mysqli);
 
 $exibir_tabela = true;
 
@@ -44,13 +48,14 @@ if (tem_post()) {
     }
 
     if (! $tem_erros) {
-        gravar_tarefa($conexao, $tarefa);
+        $tarefas->gravar_tarefa($tarefa);
+        
         header('Location: tarefas.php');
         die();
     }
 }
 
-$lista_tarefas = buscar_tarefas($conexao);
+$lista_tarefas = buscar_tarefas($mysqli);
 
 $tarefa = [
     'id'         => 0,
@@ -60,5 +65,7 @@ $tarefa = [
     'prioridade' => (isset($_POST['prioridade'])) ? $_POST['prioridade'] : 1,
     'concluida'  => (isset($_POST['concluida'])) ? $_POST['concluida'] : ''
 ];
+
+$tarefas->buscar_tarefas($mysqli);
 
 include "template.php";

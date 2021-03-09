@@ -2,8 +2,12 @@
 
 session_start();
 
+include "config.php";
 include "banco.php";
 include "ajudantes.php";
+include "classes/Tarefas.php";
+
+$tarefas = new Tarefas($mysqli);
 
 $exibir_tabela = false;
 $tem_erros = false;
@@ -45,13 +49,15 @@ if (tem_post()) {
     }
 
     if (! $tem_erros) {
-        editar_tarefa($conexao, $tarefa);
+        $tarefas->editar_tarefa($tarefa);
+
         header('Location: tarefas.php');
         die();
     }
 }
 
-$tarefa = buscar_tarefa($conexao, $_GET['id']);
+$tarefas->buscar_tarefa($_GET['id']);
+$tarefa = $tarefas->tarefa;
 
 $tarefa['nome'] = (array_key_exists('nome', $_POST)) ? $_POST['nome'] : $tarefa['nome'];
 $tarefa['descricao'] = (array_key_exists('descricao', $_POST)) ? $_POST['descricao'] : $tarefa['descricao'];
